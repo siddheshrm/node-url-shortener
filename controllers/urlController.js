@@ -13,28 +13,27 @@ async function generateShortURL(request, response) {
   let url = body.url.trim().replace(/\/+$/, "");
 
   // Check if the URL already exists in the database
-  const existingURL = await URLData.findOne({ redirectURL: url });
+  let existingURL = await URLData.findOne({ redirectURL: url });
 
-  if (existingURL) {
-    return response.render("homeView", {
-      originalURL: existingURL.redirectURL,
-      id: existingURL.shortID,
+  if (!existingURL) {
+    // Create a new shortID if URL does not exist
+    const shortID = shortid.generate();
+
+    existingURL = await URLData.create({
+      shortID: shortID,
+      redirectURL: url,
+      visitHistory: [],
     });
   }
 
-  // If the URL does not exist, create a new shortID
-  const shortID = shortid.generate();
-  //   console.log("generated shortID: " + shortID);
+  // Fetch all stored URLs to show the complete list
+  const allURLs = await URLData.find({});
 
-  const newURL = await URLData.create({
-    shortID: shortID,
-    redirectURL: url,
-    visitHistory: [],
-  });
-
+  // Render homeView with both the new URL and the full list
   return response.render("homeView", {
-    originalURL: newURL.redirectURL,
-    id: newURL.shortID,
+    id: existingURL.shortID || null,
+    originalURL: existingURL.redirectURL || null,
+    urls: allURLs,
   });
 }
 
