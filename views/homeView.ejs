@@ -28,6 +28,45 @@
                     <button type="submit">Generate</button>
                 </form>
             </div>
+
+            <div>
+                <% if (locals.urls && locals.urls.length) { %>
+                    <table border="1" cellpadding="8" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th> Sr. No. </th>
+                                <th> Original URL </th>
+                                <th> Short ID </th>
+                                <th> Clicks </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% locals.urls.forEach((url, index)=> { %>
+                                <tr>
+                                    <td>
+                                        <%= index + 1 %>
+                                    </td>
+                                    <td>
+                                        <a href="<%= url.redirectURL %>" target="_blank">
+                                            <%= url.redirectURL %>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="http://localhost:3000/url/<%= url.shortID %>" target="_blank">
+                                            <%= url.shortID %>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <%= url.visitHistory.length %>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                        </tbody>
+                    </table>
+                    <% } else { %>
+                        <p>No URLs found.</p>
+                        <% } %>
+            </div>
 </body>
 
 </html>
