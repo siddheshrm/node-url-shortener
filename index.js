@@ -2,8 +2,10 @@
 const express = require("express");
 const path = require("path");
 const { connectMongoDB } = require("./connection");
+
 const urlRoute = require("./routes/urlRoute");
 const homeRoute = require("./routes/homeRoute");
+const userRoute = require("./routes/userRoute");
 
 const app = express();
 const PORT = 3000;
@@ -25,6 +27,9 @@ app.use("/url", urlRoute);
 
 // Routes - prefix "/" for all routes defined in homeRoute
 app.use("/", homeRoute);
+
+// Routes - prefix "/user" for all routes defined in userRoute
+app.use("/user", userRoute);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${3000}`);

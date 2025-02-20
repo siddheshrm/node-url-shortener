@@ -11,4 +11,12 @@ router.get("/", async (request, response) => {
   });
 });
 
+router.get("/signup", (request, response) => {
+  return response.render("userView");
+});
+
+router.get("/login", (request, response) => {
+  return response.render("loginView");
+});
+
 module.exports = router;
