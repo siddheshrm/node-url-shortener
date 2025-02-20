@@ -7,7 +7,9 @@ const {
   redirectToURL,
 } = require("../controllers/urlController");
 
-router.post("/", generateShortURL);
+const { authenticateUser } = require("../middlewares/authMiddleware");
+
+router.post("/", authenticateUser, generateShortURL);
 
 router.get("/:shortId", redirectToURL);
 

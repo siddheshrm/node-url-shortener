@@ -1,6 +1,7 @@
 // Importing required modules
 const express = require("express");
 const path = require("path");
+const cookieParser = require("cookie-parser");
 const { connectMongoDB } = require("./connection");
 
 const urlRoute = require("./routes/urlRoute");
@@ -21,6 +22,7 @@ app.set("views", path.resolve("./views"));
 // Middlewares to parse URL-encoded data and JSON data from request body
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
 
 // Routes - prefix "/url" for all routes defined in urlRoute
 app.use("/url", urlRoute);

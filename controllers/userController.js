@@ -1,4 +1,7 @@
+const jwt = require("jsonwebtoken");
 const UsersData = require("../models/userModel");
+
+const secretKey = "my-secret-key";
 
 async function createAccount(request, response) {
   const { name, email, password } = request.body;
@@ -30,6 +33,21 @@ async function loginToAccount(request, response) {
       error: "Invalid username or password",
     });
   }
+
+  // Generate JWT token
+  const token = jwt.sign(
+    {
+      userId: existingUser._id,
+      name: existingUser.name,
+      email: existingUser.email,
+    },
+    secretKey,
+    { expiresIn: "1h" }
+  );
+
+  // Store token in a cookie (for client-side use)
+  response.cookie("authToken", token, { httpOnly: true });
+
   return response.redirect("/");
 }
 
