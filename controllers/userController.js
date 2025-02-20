@@ -1,7 +1,8 @@
 const jwt = require("jsonwebtoken");
 const UsersData = require("../models/userModel");
+const { response } = require("express");
 
-const secretKey = "my-secret-key";
+const secretKey = "url-shortner-using-shortid";
 
 async function createAccount(request, response) {
   const { name, email, password } = request.body;
@@ -51,4 +52,9 @@ async function loginToAccount(request, response) {
   return response.redirect("/");
 }
 
-module.exports = { createAccount, loginToAccount };
+async function handleLogout(request, response) {
+  response.clearCookie("authToken");
+  response.redirect("/login");
+}
+
+module.exports = { createAccount, loginToAccount, handleLogout };
