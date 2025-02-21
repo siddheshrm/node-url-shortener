@@ -1,7 +1,7 @@
+require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
-// Replace this with your own secret key before deploying
-const secretKey = "your-secret-key-here";
+const secretKey = process.env.SECRET_KEY;
 
 function authenticateUser(request, response, next) {
   // Get token from cookies

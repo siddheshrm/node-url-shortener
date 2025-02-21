@@ -1,8 +1,9 @@
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const UsersData = require("../models/userModel");
-const { response } = require("express");
+require("dotenv").config();
 
-const secretKey = "url-shortner-using-shortid";
+const secretKey = process.env.SECRET_KEY;
 
 async function createAccount(request, response) {
   const { name, email, password } = request.body;
@@ -13,8 +14,15 @@ async function createAccount(request, response) {
     return response.render("userView", { error: "Email already registered" });
   }
 
+  // Hash the password before storing it
+  const hashedPassword = await bcrypt.hash(password, 10); // 10 rounds of salting
+
   // Create new user
-  const newUser = await UsersData.create({ name, email, password });
+  const newUser = await UsersData.create({
+    name,
+    email,
+    password: hashedPassword,
+  });
 
   // If creation fails, stay on the signup page
   if (!newUser) {
@@ -26,10 +34,18 @@ async function createAccount(request, response) {
 
 async function loginToAccount(request, response) {
   const { email, password } = request.body;
-  const existingUser = await UsersData.findOne({ email, password });
+  const existingUser = await UsersData.findOne({ email });
 
   // Check if the email exists
   if (!existingUser) {
+    return response.render("loginView", {
+      error: "Invalid username or password",
+    });
+  }
+
+  // Compare input password with hashed password in the database
+  const isMatch = await bcrypt.compare(password, existingUser.password);
+  if (!isMatch) {
     return response.render("loginView", {
       error: "Invalid username or password",
     });
