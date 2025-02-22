@@ -4,6 +4,7 @@ const URLData = require("../models/urlModel");
 // Generates a short URL from a long URL, saves it in the database, and returns the short ID.
 async function generateShortURL(request, response) {
   const body = request.body;
+  const userId = request.user.userId; // Extract userId from JWT token
 
   if (!body.url) {
     return response.status(400).json({ error: "URL is required" });
@@ -12,8 +13,11 @@ async function generateShortURL(request, response) {
   // Normalize the URL: trim spaces and remove trailing slashes
   let url = body.url.trim().replace(/\/+$/, "");
 
-  // Check if the URL already exists in the database
-  let existingURL = await URLData.findOne({ redirectURL: url });
+  // Check if the URL already exists for the same user
+  let existingURL = await URLData.findOne({
+    redirectURL: url,
+    createdBy: userId,
+  });
 
   if (!existingURL) {
     // Create a new shortID if URL does not exist
@@ -23,17 +27,18 @@ async function generateShortURL(request, response) {
       shortID: shortID,
       redirectURL: url,
       visitHistory: [],
+      createdBy: userId, // Associate with logged-in user
     });
   }
 
   // Fetch all stored URLs to show the complete list
-  const allURLs = await URLData.find({});
+  const userURLs = await URLData.find({ createdBy: userId });
 
-  // Render homeView with both the new URL and the full list
+  // Render homeView with the logged-in user's URLs only
   return response.render("homeView", {
     id: existingURL.shortID || null,
     originalURL: existingURL.redirectURL || null,
-    urls: allURLs,
+    urls: userURLs,
   });
 }
 

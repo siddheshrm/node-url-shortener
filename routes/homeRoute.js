@@ -1,10 +1,13 @@
 const express = require("express");
 const URLData = require("../models/urlModel");
 
+const { authenticateUser } = require("../middlewares/authMiddleware");
+
 const router = express.Router();
 
-router.get("/", async (request, response) => {
-  const allURLs = await URLData.find({});
+router.get("/", authenticateUser, async (request, response) => {
+  const userId = request.user.userId;
+  const allURLs = await URLData.find({ createdBy: userId });
 
   return response.render("homeView", {
     urls: allURLs,

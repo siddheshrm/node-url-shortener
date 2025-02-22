@@ -39,7 +39,7 @@ async function loginToAccount(request, response) {
   // Check if the email exists
   if (!existingUser) {
     return response.render("loginView", {
-      error: "Invalid username or password",
+      error: "Email not found.",
     });
   }
 

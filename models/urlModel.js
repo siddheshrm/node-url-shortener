@@ -18,6 +18,11 @@ const URLSchema = new mongoose.Schema({
       },
     },
   ],
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "users", // Reference to Users collection
+    required: true,
+  },
 });
 
 const URLData = mongoose.model("short-url", URLSchema);
