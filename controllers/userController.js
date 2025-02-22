@@ -62,8 +62,19 @@ async function loginToAccount(request, response) {
     { expiresIn: "1h" }
   );
 
+  // Send response differently for browser and API
+  if (
+    request.headers.accept &&
+    request.headers.accept.includes("application/json")
+  ) {
+    return response.json({ token }); // API response for testing APIs
+  }
+
   // Store token in a cookie (for client-side use)
-  response.cookie("authToken", token, { httpOnly: true });
+  response.cookie("authToken", token, {
+    httpOnly: true,
+    sameSite: "Strict",
+  });
 
   return response.redirect("/");
 }
