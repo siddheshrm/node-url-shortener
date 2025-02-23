@@ -24,7 +24,35 @@ router.get("/admin", authenticateUser, async (request, response) => {
 
   return response.render("adminDashboard", {
     urls: allURLs,
+    // Send user data to EJS
+    user: request.user,
   });
+});
+
+router.post("/delete/:id", authenticateUser, async (request, response) => {
+  if (request.user.role !== "admin") {
+    return response.status(403).json({ error: "Access denied. Admins only." });
+  }
+
+  const { id } = request.params;
+  if (!id) {
+    return response.status(400).json({ message: "ID is required." });
+  }
+
+  const deletedUrl = await URLData.findByIdAndDelete(id);
+  if (!deletedUrl) {
+    return response.status(404).json({ message: "URL not found." });
+  }
+
+  // Handle API and browser differently
+  if (
+    request.headers.accept &&
+    request.headers.accept.includes("application/json")
+  ) {
+    return response.json({ message: "URL deleted successfully." });
+  }
+
+  return response.redirect("/admin");
 });
 
 router.get("/signup", (request, response) => {

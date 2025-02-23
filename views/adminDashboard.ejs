@@ -39,6 +39,7 @@
                                 <th>Original URL</th>
                                 <th>Short ID</th>
                                 <th>Clicks</th>
+                                <th>Delete</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -53,21 +54,25 @@
                                         <%= url.createdBy.name %>
                                     </td>
                                     <!-- Original URL -->
-                                    <td>
-                                        <a href="<%= url.redirectURL %>" target="_blank">
+                                    <td><a href="<%= url.redirectURL %>" target="_blank">
                                             <%= url.redirectURL %>
-                                        </a>
-                                    </td>
+                                        </a></td>
                                     <!-- Short ID -->
-                                    <td>
-                                        <a href="http://localhost:3000/url/<%= url.shortID %>" target="_blank">
+                                    <td><a href="http://localhost:3000/url/<%= url.shortID %>" target="_blank">
                                             <%= url.shortID %>
-                                        </a>
-                                    </td>
+                                        </a></td>
                                     <!-- Clicks -->
                                     <td>
                                         <%= url.visitHistory.length %>
                                     </td>
+                                    <% if (locals.user && locals.user.role==="admin" ) { %>
+                                        <td>
+                                            <form method="post" action="/delete/<%= url._id %>"
+                                                onsubmit="return confirm('Are you sure?');">
+                                                <button type="submit">Delete</button>
+                                            </form>
+                                        </td>
+                                        <% } %>
                                 </tr>
                                 <% }) %>
                         </tbody>
