@@ -4,7 +4,8 @@
   "description": "A simple URL shortener built using Node.js, Express, and REST API, following the MVC architecture for efficient URL management.",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "make-admin": "node makeAdmin.js"
   },
   "author": "Siddhesh R Mestri",
   "license": "ISC",
