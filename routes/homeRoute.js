@@ -14,6 +14,19 @@ router.get("/", authenticateUser, async (request, response) => {
   });
 });
 
+router.get("/admin", authenticateUser, async (request, response) => {
+  if (request.user.role !== "admin") {
+    return response.status(403).send("Access denied. Admins only.");
+  }
+
+  // Fetch all URLs and populate the `createdBy` field with user details
+  const allURLs = await URLData.find({}).populate("createdBy", "name");
+
+  return response.render("adminDashboard", {
+    urls: allURLs,
+  });
+});
+
 router.get("/signup", (request, response) => {
   return response.render("userView");
 });

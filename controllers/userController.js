@@ -57,6 +57,7 @@ async function loginToAccount(request, response) {
       userId: existingUser._id,
       name: existingUser.name,
       email: existingUser.email,
+      role: existingUser.role,
     },
     secretKey,
     { expiresIn: "1h" }
@@ -67,7 +68,7 @@ async function loginToAccount(request, response) {
     request.headers.accept &&
     request.headers.accept.includes("application/json")
   ) {
-    return response.json({ token }); // API response for testing APIs
+    return response.json({ token, role: existingUser.role }); // API response includes role
   }
 
   // Store token in a cookie (for client-side use)
@@ -75,6 +76,12 @@ async function loginToAccount(request, response) {
     httpOnly: true,
     sameSite: "Strict",
   });
+
+  // Redirect based on role for browser-based users
+  if (existingUser.role === "admin") {
+    // Redirect admin users
+    return response.redirect("/admin");
+  }
 
   return response.redirect("/");
 }

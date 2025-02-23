@@ -5,6 +5,7 @@ const URLData = require("../models/urlModel");
 async function generateShortURL(request, response) {
   const body = request.body;
   const userId = request.user.userId; // Extract userId from JWT token
+  const userRole = request.user.role; // Extract role from JWT token
 
   if (!body.url) {
     return response.status(400).json({ error: "URL is required" });
@@ -31,8 +32,15 @@ async function generateShortURL(request, response) {
     });
   }
 
-  // Fetch all stored URLs to show the complete list
-  const userURLs = await URLData.find({ createdBy: userId });
+  // Fetch URLs based on user role
+  let userURLs;
+  if (userRole === "admin") {
+    // Admin can see all URLs
+    userURLs = await URLData.find({});
+  } else {
+    // Regular users see only their URLs
+    userURLs = await URLData.find({ createdBy: userId });
+  }
 
   // Render homeView with the logged-in user's URLs only
   return response.render("homeView", {

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+</head>
+
+<body>
+    <h1>URL Shortener</h1>
+
+    <% if (typeof id !=="undefined" && id) { %>
+        <p>Original URL:
+            <a href="<%= originalURL %>" target="_blank">
+                <%= originalURL %>
+            </a> | Shortened URL:
+            <a href="http://localhost:3000/url/<%= id %>" target="_blank">
+                http://localhost:3000/url/<%= id %>
+            </a>
+        </p>
+        <% } %>
+
+            <div>
+                <form method="post" action="/url">
+                    <label>Enter URL to shorten</label>
+                    <input type="text" name="url" placeholder="https://example.com">
+                    <button type="submit">Generate</button>
+                </form>
+            </div>
+
+            <div>
+                <% if (locals.urls && locals.urls.length) { %>
+                    <table border="1" cellpadding="8" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Sr. No.</th>
+                                <th>Created By</th>
+                                <th>Original URL</th>
+                                <th>Short ID</th>
+                                <th>Clicks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% locals.urls.forEach((url, index)=> { %>
+                                <tr>
+                                    <!-- Sr. No. -->
+                                    <td>
+                                        <%= index + 1 %>
+                                    </td>
+                                    <!-- Created By -->
+                                    <td>
+                                        <%= url.createdBy.name %>
+                                    </td>
+                                    <!-- Original URL -->
+                                    <td>
+                                        <a href="<%= url.redirectURL %>" target="_blank">
+                                            <%= url.redirectURL %>
+                                        </a>
+                                    </td>
+                                    <!-- Short ID -->
+                                    <td>
+                                        <a href="http://localhost:3000/url/<%= url.shortID %>" target="_blank">
+                                            <%= url.shortID %>
+                                        </a>
+                                    </td>
+                                    <!-- Clicks -->
+                                    <td>
+                                        <%= url.visitHistory.length %>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                        </tbody>
+                    </table>
+                    <% } else { %>
+                        <p>No URLs found.</p>
+                        <% } %>
+            </div>
+
+            <div>
+                <form method="post" action="/user/logout">
+                    <button type="submit">Logout</button>
+                </form>
+            </div>
+</body>
+
+</html>
