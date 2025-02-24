@@ -4,6 +4,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const { connectMongoDB } = require("./connection");
 
+// Importing route handlers
 const urlRoute = require("./routes/urlRoute");
 const homeRoute = require("./routes/homeRoute");
 const userRoute = require("./routes/userRoute");
@@ -11,31 +12,33 @@ const userRoute = require("./routes/userRoute");
 const app = express();
 const PORT = 3000;
 
-// MongoDB Connection
-connectMongoDB("mongodb://127.0.0.1:27017/REST-API")
+// Establish MongoDB Connection
+connectMongoDB(process.env.MONGODB_URI)
   .then(() => console.log("MongoDB connected successfully"))
   .catch((error) => console.log("MongoDB Error: ", error));
 
+// Setting up EJS as the view engine
 app.set("view engine", "ejs");
 app.set("views", path.resolve("./views"));
 
-// Middlewares to parse URL-encoded data and JSON data from request body
+// Middleware to parse URL-encoded data (for form submissions)
 app.use(express.urlencoded({ extended: true }));
+
+// Middleware to parse JSON data from request body
 app.use(express.json());
+
+// Middleware for handling cookies
 app.use(cookieParser());
 
-// Routes - prefix "/url" for all routes defined in urlRoute
-app.use("/url", urlRoute);
+// Routes
+app.use("/url", urlRoute); // Handles URL shortening-related routes
+app.use("/", homeRoute); // Handles home/dashboard routes
+app.use("/user", userRoute); // Handles user authentication-related routes
 
-// Routes - prefix "/" for all routes defined in homeRoute
-app.use("/", homeRoute);
-
-// Serve static files from the "public" directory
+// Serve static files (CSS) from the "public" directory
 app.use(express.static("public"));
 
-// Routes - prefix "/user" for all routes defined in userRoute
-app.use("/user", userRoute);
-
+// Start the server
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${3000}`);
+  console.log(`Server is running on port ${PORT}`);
 });

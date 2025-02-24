@@ -5,6 +5,7 @@ require("dotenv").config();
 
 const secretKey = process.env.SECRET_KEY;
 
+// Creates a new user account after checking if the email already exists
 async function createAccount(request, response) {
   const { name, email, password } = request.body;
 
@@ -32,6 +33,7 @@ async function createAccount(request, response) {
   return response.redirect("/");
 }
 
+// Logs in a user by verifying email and password, then generates a JWT token
 async function loginToAccount(request, response) {
   const { email, password } = request.body;
   const existingUser = await UsersData.findOne({ email });
@@ -86,6 +88,7 @@ async function loginToAccount(request, response) {
   return response.redirect("/");
 }
 
+// Logs out a user by clearing the authentication token and redirecting to login
 async function handleLogout(request, response) {
   response.clearCookie("authToken");
   response.redirect("/login");

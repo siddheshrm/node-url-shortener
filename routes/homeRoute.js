@@ -5,6 +5,7 @@ const { authenticateUser } = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
+// Renders the home page with URLs created by the authenticated user
 router.get("/", authenticateUser, async (request, response) => {
   const userId = request.user.userId;
   const allURLs = await URLData.find({ createdBy: userId });
@@ -15,6 +16,7 @@ router.get("/", authenticateUser, async (request, response) => {
   });
 });
 
+// Renders the admin dashboard with all URLs, restricting access to admins only
 router.get("/admin", authenticateUser, async (request, response) => {
   if (request.user.role !== "admin") {
     return response.status(403).send("Access denied. Admins only.");
@@ -30,6 +32,7 @@ router.get("/admin", authenticateUser, async (request, response) => {
   });
 });
 
+// Deletes a URL if the user is an admin, handling both API and browser responses
 router.post("/delete/:id", authenticateUser, async (request, response) => {
   if (request.user.role !== "admin") {
     return response.status(403).json({ error: "Access denied. Admins only." });
@@ -56,10 +59,12 @@ router.post("/delete/:id", authenticateUser, async (request, response) => {
   return response.redirect("/admin");
 });
 
+// Renders the user signup page
 router.get("/signup", (request, response) => {
   return response.render("userView");
 });
 
+// Renders the login page
 router.get("/login", (request, response) => {
   return response.render("loginView");
 });

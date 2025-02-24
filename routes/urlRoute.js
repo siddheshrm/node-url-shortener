@@ -10,9 +10,7 @@ const {
 const { authenticateUser } = require("../middlewares/authMiddleware");
 
 router.post("/", authenticateUser, generateShortURL);
-
 router.get("/:shortId", redirectToURL);
-
 router.get("/analytics/:shortId", getAnalytics);
 
 module.exports = router;
