@@ -30,6 +30,9 @@ app.use("/url", urlRoute);
 // Routes - prefix "/" for all routes defined in homeRoute
 app.use("/", homeRoute);
 
+// Serve static files from the "public" directory
+app.use(express.static("public"));
+
 // Routes - prefix "/user" for all routes defined in userRoute
 app.use("/user", userRoute);
 

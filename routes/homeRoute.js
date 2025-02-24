@@ -11,6 +11,7 @@ router.get("/", authenticateUser, async (request, response) => {
 
   return response.render("homeView", {
     urls: allURLs,
+    user: request.user,
   });
 });
 

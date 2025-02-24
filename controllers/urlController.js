@@ -47,6 +47,7 @@ async function generateShortURL(request, response) {
     id: existingURL.shortID || null,
     originalURL: existingURL.redirectURL || null,
     urls: userURLs,
+    user: request.user,
   });
 }
 

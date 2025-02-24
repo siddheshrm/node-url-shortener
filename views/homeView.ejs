@@ -5,74 +5,83 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>See All URLs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 
 <body>
-    <h1>URL Shortener</h1>
+    <div class="container">
+        <h1>Welcome, <%= user.name %>! 👋</h1>
+        <h2>URL Shortener</h2>
 
-    <% if (typeof id !=="undefined" && id) { %>
-        <p>Original URL:
-            <a href="<%= originalURL %>" target="_blank">
-                <%= originalURL %>
-            </a> | Shortened URL:
-            <a href="http://localhost:3000/url/<%= id %>" target="_blank">
-                http://localhost:3000/url/<%= id %>
-            </a>
-        </p>
-        <% } %>
+        <% if (typeof id !=="undefined" && id) { %>
+            <p>Original URL:
+                <a href="<%= originalURL %>" target="_blank">
+                    <%= originalURL %>
+                </a> | Shortened URL:
+                <a href="http://localhost:3000/url/<%= id %>" target="_blank">
+                    http://localhost:3000/url/<%= id %>
+                </a>
+            </p>
+            <% } %>
 
-            <div>
-                <form method="post" action="/url">
-                    <label>Enter URL to shorten</label>
-                    <input type="text" name="url" placeholder="https://example.com">
-                    <button type="submit">Generate</button>
-                </form>
-            </div>
+                <div>
+                    <form method="post" action="/url">
+                        <label>Enter URL to shorten</label>
+                        <input type="text" name="url" placeholder="https://example.com">
+                        <button type="submit">Generate</button>
+                    </form>
+                </div>
 
-            <div>
-                <% if (locals.urls && locals.urls.length) { %>
-                    <table border="1" cellpadding="8" cellspacing="0">
-                        <thead>
-                            <tr>
-                                <th> Sr. No. </th>
-                                <th> Original URL </th>
-                                <th> Short ID </th>
-                                <th> Clicks </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% locals.urls.forEach((url, index)=> { %>
+                <div>
+                    <% if (locals.urls && locals.urls.length) { %>
+                        <table border="1" cellpadding="8" cellspacing="0">
+                            <thead>
                                 <tr>
-                                    <td>
-                                        <%= index + 1 %>
-                                    </td>
-                                    <td>
-                                        <a href="<%= url.redirectURL %>" target="_blank">
-                                            <%= url.redirectURL %>
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <a href="http://localhost:3000/url/<%= url.shortID %>" target="_blank">
-                                            <%= url.shortID %>
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <%= url.visitHistory.length %>
-                                    </td>
+                                    <th> Sr. No. </th>
+                                    <th> Original URL </th>
+                                    <th> Short ID </th>
+                                    <th> Clicks </th>
                                 </tr>
-                                <% }) %>
-                        </tbody>
-                    </table>
-                    <% } else { %>
-                        <p>No URLs found.</p>
-                        <% } %>
-            </div>
+                            </thead>
+                            <tbody>
+                                <% locals.urls.forEach((url, index)=> { %>
+                                    <tr>
+                                        <td>
+                                            <%= index + 1 %>
+                                        </td>
+                                        <td>
+                                            <a href="<%= url.redirectURL %>" target="_blank">
+                                                <%= url.redirectURL %>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="http://localhost:3000/url/<%= url.shortID %>" target="_blank">
+                                                <%= url.shortID %>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <%= url.visitHistory.length %>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+                        </table>
+                        <% } else { %>
+                            <p>No URLs found.</p>
+                            <% } %>
+                </div>
 
-            <div>
-                <form method="post" action="/user/logout">
-                    <button type="submit">Logout</button>
-                </form>
-            </div>
+                <div>
+                    <form method="post" action="/user/logout">
+                        <button type="submit">Logout</button>
+                    </form>
+                </div>
+    </div>
 </body>
 
 </html>
