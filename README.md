@@ -69,6 +69,10 @@ url-shortner/
 - Run `npm start` to start the server.
 - Open `http://localhost:3000/` to access the application.
 
+## API Documentation
+
+For detailed API endpoints and request-response examples, refer to [API Documentation](./API%20Documentation.md).
+
 ## Screenshots
 
 - Login Page : ![Login Page](screenshots/Login.png)
